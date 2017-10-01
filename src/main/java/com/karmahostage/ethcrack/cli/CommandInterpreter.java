@@ -13,13 +13,17 @@ import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Stream;
+import java.util.Scanner;
 
 public class CommandInterpreter {
 
     private ExecutorService executorService;
 
     public CommandInterpreter() {
-        this.executorService = Executors.newFixedThreadPool(16);
+        int nrCores = Runtime.getRuntime().availableProcessors();
+        System.out.println("Available cores: " + nrCores);
+        System.out.println("Using cores: " + Math.max(1, nrCores / 2));
+        this.executorService = Executors.newFixedThreadPool(Math.max(1, nrCores / 2));
     }
 
     public void interpret(String[] args) {
@@ -47,6 +51,16 @@ public class CommandInterpreter {
             Optional<String> password = interpetPassword(cmd);
             if (password.isPresent()) {
                 process(ethKeystore, password.get());
+            }else if(cmd.hasOption("s")){
+                Scanner sc = new Scanner(System.in);
+
+                String line;
+
+                while(!(line = sc.nextLine()).equals("::STOP")){
+                    process(ethKeystore, line);
+                }
+
+                sc.close();
             } else {
                 File file = interpretWordlist(cmd);
                 System.out.println("going to try recovering with the wordlist");
@@ -124,6 +138,11 @@ public class CommandInterpreter {
                 .desc("use a wordlist to recover your password")
                 .build();
 
+        Option stdIn = Option.builder("s")
+                .longOpt("standard-input")
+                .desc("use standard input for passwords")
+                .build();
+
         Option password = Option.builder("p")
                 .longOpt("password")
                 .hasArg()
@@ -140,6 +159,7 @@ public class CommandInterpreter {
         return new Options()
                 .addOption(help)
                 .addOption(wordlist)
+                .addOption(stdIn)
                 .addOption(password)
                 .addOption(wallet);
     }
