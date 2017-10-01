@@ -12,6 +12,7 @@ usage: ethcrack
  -h,--help                               print this help
  -p,--password <arg>                     test specific password
  -w,--wallet <default: wallet.json>      mist wallet file
+ -s,--standard-input                     use standard input for passwords
 ```
 
 for presale wallets, consider using https://github.com/ryepdx/pyethrecover
