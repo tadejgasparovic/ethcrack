@@ -3,7 +3,7 @@ Ethcrack
 
 > Recover your forgotten mist-wallet password
 
-##Usage
+## Usage
 
 ```
 usage: ethcrack
@@ -17,6 +17,6 @@ usage: ethcrack
 
 for presale wallets, consider using https://github.com/ryepdx/pyethrecover
 
-###Disclaimer
+### Disclaimer
 
 Mist wallets use scrypt algorithms, which are quite slow. Recovering your password might take a long time, but it might be your only hope.
